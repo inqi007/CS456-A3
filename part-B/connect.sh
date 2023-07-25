@@ -51,11 +51,13 @@ $ofctl add-flow r1 \
 
 # OVS rules for s2
 $ofctl add-flow s2 \
-    in_port=1,actions=output:2
+    actions=1,2
+    # in_port=1,actions=output:2
     # dl_src=0A:00:0A:FE:00:02, dl_dst=b0:b0:b0:b0:b0:b0, action=output:2
 
 $ofctl add-flow s2 \
-    in_port=2,actions=output:1
+    actions=1,2
+    # in_port=2,actions=output:1
     # dl_src=0A:00:01:01:00:01, dl_dst=0A:00:0E:FE:00:02, actions=output:1
 
 
