@@ -36,10 +36,10 @@ $ofctl add-flow s1 \
 
 # OVS rules for r1
 $ofctl add-flow r1 \
-    ip, nw_src=10.1.1.17,nw_dst=10.4.4.48,actions=mod_dl_src:0A:00:0E:FE:00:02,mod_dl_dst:0A:00:01:01:00:01,output=2
+    dl_src=0A:00:0E:FE:00:02, dl_dst=0A:00:01:01:00:01, action=output:2
 
 $ofctl add-flow r1 \
-    ip, nw_src=10.4.4.48,nw_dst=10.1.1.17,actions=mod_dl_src:0A:00:04:01:00:01,mod_dl_dst:0A:00:0A:01:00:02,output=1
+    dl_src=0A:00:04:01:00:01, dl_dst=0A:00:0A:01:00:02, actions=output:1
 
 # OVS rules for s2
 $ofctl add-flow s2 \
