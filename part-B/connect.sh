@@ -40,13 +40,13 @@ $ofctl add-flow s1 \
 
 # OVS rules for r1
 $ofctl add-flow r1 \
-    dl_src=0A:00:0E:FE:00:02,dl_dst=b0:b0:b0:b0:b0:b0,actions=1,2
-    # in_port=1,ip,nw_src=10.1.1.17,nw_dst=10.4.4.48,actions=mod_dl_src:0A:00:0E:FE:00:02,mod_dl_dst:b0:b0:b0:b0:b0:b0,output=2
+    in_port=1,ip,nw_src=10.1.1.17,nw_dst=10.4.4.48,actions=mod_dl_src:0A:00:0E:FE:00:02,mod_dl_dst:b0:b0:b0:b0:b0:b0,output=2
+    # dl_src=0A:00:0E:FE:00:02,dl_dst=b0:b0:b0:b0:b0:b0,actions=1,2
     # mod_dl_src=0A:00:0E:FE:00:02, mod_dl_dst=b0:b0:b0:b0:b0:b0, actions=1,2
 
 $ofctl add-flow r1 \
-    dl_src=0A:00:04:01:00:01,dl_dst=aa:aa:aa:aa:aa:aa,actions=1,2
-    # in_port=2,ip,nw_src=10.4.4.48,nw_dst=10.1.1.17,actions=mod_dl_src:0A:00:04:01:00:01,mod_dl_dst:aa:aa:aa:aa:aa:aa,output=1
+    in_port=2,ip,nw_src=10.4.4.48,nw_dst=10.1.1.17,actions=mod_dl_src:0A:00:04:01:00:01,mod_dl_dst:aa:aa:aa:aa:aa:aa,output=1
+    # dl_src=0A:00:04:01:00:01,dl_dst=aa:aa:aa:aa:aa:aa,actions=1,2
     # mod_dl_src=0A:00:04:01:00:01, mod_dl_dst=aa:aa:aa:aa:aa:aa, actions=1,2
 
 
