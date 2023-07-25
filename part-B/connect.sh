@@ -48,28 +48,28 @@ $ofctl add-flow s2 \
 $ofctl add-flow s2 \
     actions=1,2
 
-# Bob <--> Carol
+# # Bob <--> Carol
 
-# OVS rules for s2
-$ofctl add-flow s2 \
-    actions=2,3
+# # OVS rules for s2
+# $ofctl add-flow s2 \
+#     actions=2,3
 
-$ofctl add-flow s2 \
-    actions=2,3
+# $ofctl add-flow s2 \
+#     actions=2,3
 
-# OVS rules for r2
-$ofctl add-flow r2 \
-    in_port=1,ip,nw_src=10.4.4.48,nw_dst=10.6.6.69,actions=mod_dl_src:0A:00:10:FE:00:02,mod_dl_dst:cc:cc:cc:cc:cc:cc,output=2
+# # OVS rules for r2
+# $ofctl add-flow r2 \
+#     in_port=1,ip,nw_src=10.4.4.48,nw_dst=10.6.6.69,actions=mod_dl_src:0A:00:10:FE:00:02,mod_dl_dst:cc:cc:cc:cc:cc:cc,output=2
 
-$ofctl add-flow r2 \
-    in_port=2,ip,nw_src=10.6.6.69,nw_dst=10.4.4.48,actions=mod_dl_src:0A:00:05:01:00:01,mod_dl_dst:b0:b0:b0:b0:b0:b0,output=1
+# $ofctl add-flow r2 \
+#     in_port=2,ip,nw_src=10.6.6.69,nw_dst=10.4.4.48,actions=mod_dl_src:0A:00:05:01:00:01,mod_dl_dst:b0:b0:b0:b0:b0:b0,output=1
 
-# OVS rules for s3
-$ofctl add-flow s3 \
-    actions=1,2
+# # OVS rules for s3
+# $ofctl add-flow s3 \
+#     actions=1,2
 
-$ofctl add-flow s3 \
-    actions=1,2
+# $ofctl add-flow s3 \
+#     actions=1,2
 
 # Print the flows installed in each switch
 for switch in s1 s2 s3 r1 r2;
