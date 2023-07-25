@@ -30,37 +30,46 @@ ofctl='ovs-ofctl -O OpenFlow13'
 # OVS rules for s1
 $ofctl add-flow s1 \
     actions=1,2
-    # in_port=1,actions=output:2
-#    dl_src=0A:00:0A:01:00:02, dl_dst=0A:00:04:01:00:01, action=output:2
 
 $ofctl add-flow s1 \
     actions=1,2
-    # in_port=2,actions=output:1
-#    dl_src=0A:00:00:01:00:01, dl_dst=aa:aa:aa:aa:aa:aa, actions=output:1
 
 # OVS rules for r1
 $ofctl add-flow r1 \
     in_port=1,ip,nw_src=10.1.1.17,nw_dst=10.4.4.48,actions=mod_dl_src:0A:00:0E:FE:00:02,mod_dl_dst:b0:b0:b0:b0:b0:b0,output=2
-    # dl_src=0A:00:0E:FE:00:02,dl_dst=b0:b0:b0:b0:b0:b0,actions=1,2
-    # mod_dl_src=0A:00:0E:FE:00:02, mod_dl_dst=b0:b0:b0:b0:b0:b0, actions=1,2
 
 $ofctl add-flow r1 \
     in_port=2,ip,nw_src=10.4.4.48,nw_dst=10.1.1.17,actions=mod_dl_src:0A:00:04:01:00:01,mod_dl_dst:aa:aa:aa:aa:aa:aa,output=1
-    # dl_src=0A:00:04:01:00:01,dl_dst=aa:aa:aa:aa:aa:aa,actions=1,2
-    # mod_dl_src=0A:00:04:01:00:01, mod_dl_dst=aa:aa:aa:aa:aa:aa, actions=1,2
-
 
 # OVS rules for s2
 $ofctl add-flow s2 \
     actions=1,2
-    # in_port=1,actions=output:2
-    # dl_src=0A:00:0A:FE:00:02, dl_dst=b0:b0:b0:b0:b0:b0, action=output:2
 
 $ofctl add-flow s2 \
     actions=1,2
-    # in_port=2,actions=output:1
-    # dl_src=0A:00:01:01:00:01, dl_dst=0A:00:0E:FE:00:02, actions=output:1
 
+# Bob <--> Carol
+
+# OVS rules for s2
+$ofctl add-flow s2 \
+    actions=2,3
+
+$ofctl add-flow s2 \
+    actions=2,3
+
+# OVS rules for r2
+$ofctl add-flow r2 \
+    in_port=1,ip,nw_src=10.4.4.48,nw_dst=10.6.6.69,actions=mod_dl_src:0A:00:10:FE:00:02,mod_dl_dst:cc:cc:cc:cc:cc:cc,output=2
+
+$ofctl add-flow r2 \
+    in_port=2,ip,nw_src=10.6.6.69,nw_dst=10.4.4.48,actions=mod_dl_src:0A:00:05:01:00:01,mod_dl_dst:b0:b0:b0:b0:b0:b0,output=1
+
+# OVS rules for s3
+$ofctl add-flow s3 \
+    actions=1,2
+
+$ofctl add-flow s3 \
+    actions=1,2
 
 # Print the flows installed in each switch
 for switch in s1 s2 s3 r1 r2;
