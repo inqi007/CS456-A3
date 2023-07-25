@@ -52,10 +52,10 @@ ofctl='ovs-ofctl -O OpenFlow13'
 
 # OVS rules for s2
 $ofctl add-flow s2 \
-    actions=2,3
+    actions=1,2
 
 $ofctl add-flow s2 \
-    actions=2,3
+    actions=1,2
 
 # OVS rules for r2
 $ofctl add-flow r2 \
