@@ -29,12 +29,12 @@ ofctl='ovs-ofctl -O OpenFlow13'
 
 # OVS rules for s1
 $ofctl add-flow s1 \
-    actions=all,in_port
+    actions=1,2
     # in_port=1,actions=output:2
 #    dl_src=0A:00:0A:01:00:02, dl_dst=0A:00:04:01:00:01, action=output:2
 
 $ofctl add-flow s1 \
-    actions=all,in_port
+    actions=1,2
     # in_port=2,actions=output:1
 #    dl_src=0A:00:00:01:00:01, dl_dst=aa:aa:aa:aa:aa:aa, actions=output:1
 
