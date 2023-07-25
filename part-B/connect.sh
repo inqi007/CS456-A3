@@ -52,10 +52,10 @@ ofctl='ovs-ofctl -O OpenFlow13'
 
 # OVS rules for s2
 $ofctl add-flow s2 \
-    actions=1,2
+    in_port=2,actions=output:3
 
 $ofctl add-flow s2 \
-    actions=1,2
+    in_port=3,actions=output:2
 
 # OVS rules for r2
 $ofctl add-flow r2 \
@@ -66,10 +66,10 @@ $ofctl add-flow r2 \
 
 # OVS rules for s3
 $ofctl add-flow s3 \
-    actions=1,2
+    in_port=1,actions=output:2
 
 $ofctl add-flow s3 \
-    actions=1,2
+    in_port=2,actions=output:1
 
 # Print the flows installed in each switch
 for switch in s1 s2 s3 r1 r2;
