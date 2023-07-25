@@ -1,8 +1,5 @@
 #!/usr/bin/python
 
-"""Topology with 10 switches and 10 hosts
-"""
-
 from mininet.cli import CLI
 from mininet.topo import Topo
 from mininet.net import Mininet
