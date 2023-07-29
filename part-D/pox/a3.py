@@ -278,9 +278,46 @@ def install_udp_middlebox_flow( source_dpid
     # 
     # But remember that your code had to work for _any loopfree_ topology so
     # don't make it specific to this example!
-    print("Hello CS456 Student! You need to add code to this function "
-          "to complete part D of assignment 3!")
 
+    source_ip = get_host_ip_from_dpid(source_dpid)
+    source_mac = get_host_mac_from_dpid(source_dpid)
+    dst_ip = get_host_ip_from_dpid(destination_dpid)
+    dst_mac = get_host_mac_from_dpid(destination_dpid)
+
+    graph = get_networkx_topology_graph()
+    path_to_middlebox = get_shortest_path_between(graph, source_dpid, middlebox_dpid)
+    path_to_dst = get_shortest_path_between(graph, middlebox_dpid, destination_dpid)
+
+    for i in range(len(path_to_middlebox)):
+        src_port = get_input_port(path_to_middlebox, path_to_middlebox[i])
+        match = build_match_for(source_mac, dst_mac, source_ip, dst_ip, source_port, destination_port, src_port)
+
+        if i == len(path_to_middlebox) - 1:
+            middlebox_port = get_host_port(path_to_middlebox[i])
+            flowmod = build_openflow_flowmod(match, middlebox_port)
+
+        else:
+            ports = get_ports_connecting(path_to_middlebox[i], path_to_middlebox[i+1])
+            in_port = ports[0]
+            out_port = ports[1]
+            flowmod = build_openflow_flowmod(match, in_port)
+        
+        install_flowmod_on_switch_with_dpid(flowmod, path_to_middlebox[i])
+
+    for i in range(len(path_to_dst)):
+        src_port = get_input_port(path_to_dst, path_to_dst[i])
+        match = build_match_for(source_mac, dst_mac, source_ip, dst_ip, source_port, destination_port, src_port)
+        if i == len(path_to_dst) - 1:
+            middlebox_port = get_host_port(path_to_dst[i])
+            flowmod = build_openflow_flowmod(match, middlebox_port)
+
+        else:
+            ports = get_ports_connecting(path_to_dst[i], path_to_dst[i + 1])
+            in_port = ports[0]
+            out_port = ports[1]
+            flowmod = build_openflow_flowmod(match, in_port)
+        
+        install_flowmod_on_switch_with_dpid(flowmod, path_to_dst[i])
 def do_install():
     """
     do_install: None
@@ -292,11 +329,11 @@ def do_install():
     run your program.
     """
 
-    source_dpid = None
-    destination_dpid = None
-    middlebox_dpid = None
-    source_port = None
-    destination_port = None
+    source_dpid = 3
+    destination_dpid = 1
+    middlebox_dpid = 7
+    source_port = 7123
+    destination_port = 6123
     install_udp_middlebox_flow(source_dpid, destination_dpid, middlebox_dpid,
             source_port, destination_port)
 
