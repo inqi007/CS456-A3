@@ -329,11 +329,11 @@ def do_install():
     run your program.
     """
 
-    source_dpid = 3
-    destination_dpid = 1
-    middlebox_dpid = 7
-    source_port = 7123
-    destination_port = 6123
+    source_dpid = None
+    destination_dpid = None
+    middlebox_dpid = None
+    source_port = None
+    destination_port = None
     install_udp_middlebox_flow(source_dpid, destination_dpid, middlebox_dpid,
             source_port, destination_port)
 
