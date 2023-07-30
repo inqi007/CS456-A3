@@ -281,43 +281,48 @@ def install_udp_middlebox_flow( source_dpid
 
     source_ip = get_host_ip_from_dpid(source_dpid)
     source_mac = get_host_mac_from_dpid(source_dpid)
-    dst_ip = get_host_ip_from_dpid(destination_dpid)
-    dst_mac = get_host_mac_from_dpid(destination_dpid)
+    dest_ip = get_host_ip_from_dpid(destination_dpid)
+    dest_mac = get_host_mac_from_dpid(destination_dpid)
 
-    graph = get_networkx_topology_graph()
-    path_to_middlebox = get_shortest_path_between(graph, source_dpid, middlebox_dpid)
-    path_to_dst = get_shortest_path_between(graph, middlebox_dpid, destination_dpid)
+    topo_graph = get_networkx_topology_graph()
+    midbox_path = get_shortest_path_between(topo_graph, source_dpid, middlebox_dpid)
+    dest_path = get_shortest_path_between(topo_graph, middlebox_dpid, destination_dpid)
 
-    for i in range(len(path_to_middlebox)):
-        src_port = get_input_port(path_to_middlebox, path_to_middlebox[i])
-        match = build_match_for(source_mac, dst_mac, source_ip, dst_ip, source_port, destination_port, src_port)
+    midbox_steps = len(midbox_path)
+    dest_steps = len(dest_path)
 
-        if i == len(path_to_middlebox) - 1:
-            middlebox_port = get_host_port(path_to_middlebox[i])
-            flowmod = build_openflow_flowmod(match, middlebox_port)
+    # packets going from source to middle box
+    for i in range(midbox_steps):
+        in_port = get_input_port(midbox_path, midbox_path[i])
+        matched = build_match_for(source_mac, dest_mac, source_ip, dest_ip, source_port, destination_port, in_port)
 
-        else:
-            ports = get_ports_connecting(path_to_middlebox[i], path_to_middlebox[i+1])
-            in_port = ports[0]
-            out_port = ports[1]
-            flowmod = build_openflow_flowmod(match, in_port)
-        
-        install_flowmod_on_switch_with_dpid(flowmod, path_to_middlebox[i])
-
-    for i in range(len(path_to_dst)):
-        src_port = get_input_port(path_to_dst, path_to_dst[i])
-        match = build_match_for(source_mac, dst_mac, source_ip, dst_ip, source_port, destination_port, src_port)
-        if i == len(path_to_dst) - 1:
-            middlebox_port = get_host_port(path_to_dst[i])
-            flowmod = build_openflow_flowmod(match, middlebox_port)
+        if i == midbox_steps - 1:
+            midbox_port = get_host_port(midbox_path[i])
+            of_flow = build_openflow_flowmod(matched, midbox_port)
 
         else:
-            ports = get_ports_connecting(path_to_dst[i], path_to_dst[i + 1])
+            ports = get_ports_connecting(midbox_path[i], midbox_path[i+1])
             in_port = ports[0]
-            out_port = ports[1]
-            flowmod = build_openflow_flowmod(match, in_port)
+            of_flow = build_openflow_flowmod(matched, in_port)
         
-        install_flowmod_on_switch_with_dpid(flowmod, path_to_dst[i])
+        install_flowmod_on_switch_with_dpid(of_flow, midbox_path[i])
+
+    # packets going from middlebox to destination
+    for i in range(dest_steps):
+        in_port = get_input_port(dest_path, dest_path[i])
+        matched = build_match_for(source_mac, dest_mac, source_ip, dest_ip, source_port, destination_port, in_port)
+
+        if i == dest_steps - 1:
+            midbox_port = get_host_port(dest_path[i])
+            of_flow = build_openflow_flowmod(matched, midbox_port)
+
+        else:
+            ports = get_ports_connecting(dest_path[i], dest_path[i + 1])
+            in_port = ports[0]
+            of_flow = build_openflow_flowmod(matched, in_port)
+        
+        install_flowmod_on_switch_with_dpid(of_flow, dest_path[i])
+
 def do_install():
     """
     do_install: None
